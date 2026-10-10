@@ -1,21 +1,18 @@
 ---
 name: receipts-research
-description: Gather, verify, and present data so every displayed claim stands up to an audit — each number traces to a receipt a reader can open, code does the counting, corrections are a visible layer over untouched sources, and the dataset reports its own coverage. For agent-built data work where the fear is hallucinated or misrepresented data, the expensive visualization nobody can trust. A router with reference files: how a claim is stored (a shared receipt object with verbatim quotes), how a dataset is audited (the quote gate, coverage report, floors, known-answer gates), how research is organized (probe before harvest, fleet briefs that reject as well as confirm), and one opinion on persisting, querying, and publishing it; plus a script that string-checks every receipt. Use when accuracy and independent verifiability matter (a journalistic standard; anything a reader might fact-check), when the user asks for per-row citations or receipts, wants a computed dataset verified row-by-row, needs data researched because no dataset exists, asks how far back a dataset can go, or mentions the how-many-rings / hostile-territory / cfb-streak-king pattern.
+description: Gather, verify, and present data so every displayed claim stands up to an audit — each number traces to a receipt a reader can open, code does the counting, corrections are a visible layer over untouched sources, and the dataset reports its own coverage. For agent-built data work where the fear is hallucinated or misrepresented data, the expensive visualization nobody can trust. A router with reference files: how a claim is stored (a shared receipt object with verbatim quotes), how a dataset is audited (the quote gate, coverage report, floors, known-answer gates), how research is organized (probe before harvest, fleet briefs that reject as well as confirm), and one opinion on persisting, querying, and publishing it; plus a script that string-checks every receipt. Use when accuracy and independent verifiability matter (a journalistic standard; anything a reader might fact-check), when the user asks for per-row citations or receipts, wants a computed dataset verified row-by-row, needs data researched because no dataset exists, or asks how far back a dataset can go
 ---
 
 # Data that survives an audit
 
-The fear with agent-built data work is that the model made some of it up or
-bent it, and nobody can tell which part, so the visualization that cost a
-billion tokens is hard to trust. This skill is the method for making the data
-trustable: every displayed claim traces to a receipt a reader can open, code
-does all the counting, corrections sit in a visible layer over sources left as
+An anticipated reservation against using agents to do data-driven visualizations is their reliability as researchers; they can hallucinate or misinterpret data and it's hard to sort out after the initial research is done. This skill is the method for making the data
+trustable: every displayed claim traces to a receipt a reader can open, and the data is structured so that derived information is always derived, corrections sit in a visible layer over sources left as
 fetched, and the dataset reports what it does not cover. The standard is
 journalistic. A reader can check any number against the source it came from,
 and a wrong one can be shown wrong.
 
 It applies whether the data is downloaded, researched from documents by an
-agent fleet, or both. Three projects shaped it, and `references/cases.md`
+agent fleet, or both. Three open source projects shaped the skill, and `references/cases.md`
 holds the incidents the rules cite.
 
 ## Three shapes of the job
