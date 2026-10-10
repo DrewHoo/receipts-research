@@ -31,8 +31,8 @@ holds the incidents the rules cite.
 
 ## The invariants
 
-1. **Every displayed claim carries a receipt** a reader can open: a URL and
-   the verbatim line that supports it, in one shared shape. → `claims.md`
+1. **Every displayed claim can be traced to a receipt** a reader can open: a URL and
+   the verbatim line that supports it, in one shared shape. → `claims.md`. Receipts may be displayed in the UI but either way they must be open source, or else they aren't independently verifiable.
 2. **The model never counts.** Agents extract rows; code joins, counts, and
    ranks, so a wrong total can only come from a wrong, auditable row.
    → `stack.md`
