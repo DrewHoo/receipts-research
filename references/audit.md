@@ -18,7 +18,10 @@ csk-scratchpad-pages-died). A page a script cannot fetch gets its text dropped
 into `DIR/<sha1(url)>.txt` by hand or by the agent that read it.
 
 Do not trust an agent's report that it checked its own quotes. Run the gate
-yourself, on the committed pages.
+yourself, on the committed pages. The first full run over a project that had
+"string-checked" its quotes by agent report found four page-shape changes,
+three PDFs no fetch could read, and a page gone behind a bot wall (cases:
+csk-receipt-migration).
 
 ## The coverage report
 

@@ -247,6 +247,23 @@ The same brief stated a hypothesis about Boise State 1996 as "I believe …
 verify"; it was backwards, and the agent rejected it because the framing
 allowed it to.
 
+### csk-receipt-migration
+Moving the four older ruling files onto the receipt object (2026-10-10) and
+running the gate over all 646 receipts found: 4 extra-game rows whose page
+had changed shape (Wikipedia's Parsoid HTML puts wikitext in `data-mw`
+attributes, `>` included, so a naive `<[^>]+>` stripper spills attribute
+text into the page; and a schedule table's non-conference `*` now sits in
+its own element, so "Whitman*" reads "Whitman *"); 3 PDF sources (media
+guides, a fact book) a fetch can't read, whose text PyMuPDF extracted into
+the saved-pages directory by hand; one page that had gone behind a bot wall
+since September, re-pointed at its Wayback snapshot; Wikipedia rate-limiting
+(429) after a few hundred quick fetches; and two rows that had named their
+page without a quote. Coach rulings got receipts by deriving each season's
+Wikipedia page from team name plus mascot — 132 of 138 on the first pass,
+the rest under historic names (Colgate Red Raiders, Texas Mines). Every
+one of these was invisible until the gate ran against saved pages; the
+data file's note had said "quotes string-checked against the saved pages."
+
 ### csk-repole-errata-public
 78 corrections to Repole's spread files, each confirmed against Howell and,
 where they exist, cfbfastR and CFBD, exported to a public CC0 repo after

@@ -39,15 +39,21 @@ if (!opt.files.length) {
 
 const sha1 = (s) => createHash('sha1').update(s).digest('hex');
 
+// The same normalization on both sides: whitespace collapsed, curly quotes
+// straightened, Wikipedia's "[12]" citation markers dropped, and no space
+// before punctuation (a tag boundary before a period leaves one). --loose
+// also folds dashes and case.
 function normalize(s) {
-  let t = s.replace(/\s+/g, ' ').trim();
-  if (opt.loose) {
-    t = t
-      .replace(/[‘’‚‛]/g, "'")
-      .replace(/[“”„‟]/g, '"')
-      .replace(/[‐‑‒–—−]/g, '-')
-      .toLowerCase();
-  }
+  let t = s
+    .replace(/[‘’‚‛]/g, "'")
+    .replace(/[“”„‟]/g, '"')
+    .replace(/ /g, ' ')
+    .replace(/\[\d+\]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([.,;:!?)\]*])/g, '$1')
+    .replace(/([(\[])\s+/g, '$1')
+    .trim();
+  if (opt.loose) t = t.replace(/[‐‑‒–—−]/g, '-').toLowerCase();
   return t;
 }
 
@@ -57,8 +63,9 @@ function htmlToText(html) {
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/<\/?(br|p|td|th|tr|li|h[1-6]|div|section|table)\b[^>]*>/gi, ' ')
-    .replace(/<[^>]+>/g, '')
+    // a tag ends at the first '>' outside a quoted attribute: Wikipedia's
+    // Parsoid HTML carries wikitext in data-mw attributes, '>' included
+    .replace(/<(?:[^>"']|"[^"]*"|'[^']*')*>/g, ' ')
     .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
     .replace(/&([a-z]+);/gi, (m, n) => ENTITIES[n.toLowerCase()] ?? m);
@@ -89,11 +96,17 @@ async function pageText(url) {
     if (opt.offline) result = { error: 'no saved page (offline)' };
     else {
       try {
-        const res = await fetch(url, {
-          headers: { 'user-agent': 'check-receipts/1 (receipts-research skill)' },
-          signal: AbortSignal.timeout(20000),
-          redirect: 'follow',
-        });
+        // Wikipedia rate-limits a few hundred quick fetches (429); back off and retry
+        let res;
+        for (let attempt = 0; ; attempt++) {
+          res = await fetch(url, {
+            headers: { 'user-agent': 'check-receipts/1 (receipts-research skill)' },
+            signal: AbortSignal.timeout(30000),
+            redirect: 'follow',
+          });
+          if (res.status !== 429 || attempt === 3) break;
+          await new Promise((r) => setTimeout(r, 15000 * (attempt + 1)));
+        }
         const type = res.headers.get('content-type') || '';
         if (!res.ok) result = { error: `HTTP ${res.status}` };
         else if (/pdf/i.test(type)) result = { error: `PDF — extract its text to ${opt.pages ?? '<pages dir>'}/${sha}.txt` };
@@ -107,7 +120,7 @@ async function pageText(url) {
             saveIndex();
           }
         }
-        await new Promise((r) => setTimeout(r, 250));
+        await new Promise((r) => setTimeout(r, 1000));
       } catch (e) {
         result = { error: e.name === 'TimeoutError' ? 'timeout' : e.message };
       }
